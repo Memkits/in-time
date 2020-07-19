@@ -507,6 +507,11 @@ crypto-browserify@^3.11.0:
     randombytes "^2.0.0"
     randomfill "^1.0.3"
 
+dayjs@^1.8.29:
+  version "1.8.29"
+  resolved "https://registry.npm.taobao.org/dayjs/download/dayjs-1.8.29.tgz?cache=0&sync_timestamp=1593704488382&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fdayjs%2Fdownload%2Fdayjs-1.8.29.tgz#5d23e341de6bfbd206c01136d2fb0f01877820f5"
+  integrity sha1-XSPjQd5r+9IGwBE20vsPAYd4IPU=
+
 des.js@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/des.js/download/des.js-1.0.1.tgz#5382142e1bdc53f85d86d53e5f4aa7deb91e0843"

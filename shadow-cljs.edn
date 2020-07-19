@@ -1,5 +1,5 @@
 {
-  :source-paths ["src" "cli"]
+  :source-paths ["src" "data" "cli"]
   :cache-blockers #{cumulo-util.build}
   :dependencies [
     [mvc-works/hsl "0.1.2"]
