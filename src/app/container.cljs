@@ -2,7 +2,7 @@
 (ns app.container
   (:require [phlox.core
              :refer
-             [defcomp >> hslx rect circle text container graphics create-list]]
+             [defcomp >> hslx rect circle text container graphics create-list g]]
             [shadow.resource :refer [inline]]
             [cljs.reader :refer [read-string]]
             [phlox.comp.slider :refer [comp-slider]]
@@ -30,7 +30,7 @@
     :on-change (fn [v d!] (d! cursor (assoc state :from v)))})
   (text
    {:text (.format (dayjs (:from state)) "YYYY-MM-DD"),
-    :position [220 50],
+    :position [400 20],
     :style {:fill (hslx 0 0 100), :font-size 14}})
   (comp-slider
    (>> states :to)
@@ -39,19 +39,61 @@
     :unit (* a-day 1000),
     :round? true,
     :max now-time,
-    :position [400 20],
+    :position [600 20],
     :on-change (fn [v d!] (d! cursor (assoc state :to v)))})
   (text
    {:text (.format (dayjs (:to state)) "YYYY-MM-DD"),
-    :position [400 50],
+    :position [480 20],
     :style {:fill (hslx 0 0 100), :font-size 14}})))
 
 (defcomp
  comp-records
- (current-records)
- (text {:text "TODO", :position [100 100], :style {:fill (hslx 0 0 100)}}))
+ (current-records from to)
+ (let [whole-width (- js/window.innerWidth 80)]
+   (container
+    {:position [40 60]}
+    (graphics
+     {:ops [(g :line-style {:color (hslx 0 0 20), :width 1, :alpha 1})
+            (g :move-to [0 0])
+            (g :line-to [0 400])
+            (g :move-to [whole-width 0])
+            (g :line-to [whole-width 400])]})
+    (create-list
+     :container
+     {}
+     (->> current-records
+          (sort-by :from)
+          (map-indexed
+           (fn [idx record]
+             (let [y (* 16 idx)
+                   t1 (:from record)
+                   t2 (:to record)
+                   x1 (max 0 (* whole-width (/ (- t1 from) (- to from))))
+                   x2 (* whole-width (min 1 (/ (- t2 from) (- to from))))]
+               [idx
+                (container
+                 {}
+                 (rect
+                  {:position [x1 y],
+                   :size [(- x2 x1) (case (:kind record) :person 10 :dynasty 12 8)],
+                   :fill (case (:kind record)
+                     :person (hslx 200 80 30)
+                     :dynasty (hslx 100 80 30)
+                     (hslx 0 0 40))})
+                 (text
+                  {:text (str
+                          (:name record)
+                          " "
+                          (.format (dayjs t1) "YYYY-MM-DD")
+                          "~"
+                          (.format (dayjs t2) "YYYY-MM-DD")),
+                   :position [(- x1 20) (+ y 1)],
+                   :style {:fill (hslx 0 0 70), :font-size 8}}))]))))))))
 
-(defn time->number [x] (.valueOf (js/Date. x)))
+(defn time->number [x]
+  (let [parsed (js/Date. x)]
+    (when (= (first x) "-") (.setYear parsed (- 0 (.getFullYear parsed))))
+    (.valueOf parsed)))
 
 (def db
   (-> (read-string (inline "times.edn"))
@@ -69,11 +111,14 @@
  (store)
  (let [states (:states store)
        cursor []
-       state (or (:data states) {:from (- now-time (* 10 a-year)), :to now-time})
+       state (or (:data states) {:from (- now-time (* 1000 a-year)), :to now-time})
        current-records (->> db
                             :times
                             (filter
                              (fn [record]
                                (and (< (:from record) (:to state))
                                     (> (:to record) (:from state))))))]
-   (container {} (comp-records current-records) (comp-controls states cursor state))))
+   (container
+    {}
+    (comp-records current-records (:from state) (:to state))
+    (comp-controls states cursor state))))

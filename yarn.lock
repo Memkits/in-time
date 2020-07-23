@@ -646,6 +646,11 @@ ismobilejs@^1.1.0:
   resolved "https://registry.npm.taobao.org/ismobilejs/download/ismobilejs-1.1.1.tgz?cache=0&sync_timestamp=1586903819705&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fismobilejs%2Fdownload%2Fismobilejs-1.1.1.tgz#c56ca0ae8e52b24ca0f22ba5ef3215a2ddbbaa0e"
   integrity sha1-xWygro5Sskyg8iul7zIVot27qg4=
 
+luxon@^1.24.1:
+  version "1.24.1"
+  resolved "https://registry.npm.taobao.org/luxon/download/luxon-1.24.1.tgz#a8383266131ed4eaed4b5f430f96f3695403a52a"
+  integrity sha1-qDgyZhMe1OrtS19DD5bzaVQDpSo=
+
 md5.js@^1.3.4:
   version "1.3.5"
   resolved "https://registry.npm.taobao.org/md5.js/download/md5.js-1.3.5.tgz#b5d07b8e3216e3e27cd728d72f70d1e6a342005f"

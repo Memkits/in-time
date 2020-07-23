@@ -1,7 +1,24 @@
 
+; 只有年份没有月份默认使用 06-30
+; 冬天默认 11-30
 {
   :times [
-    {:name "李白" :from "701-05-19" :to "762-11-30"}
-    {:name "杜甫" :from "712-02-12" :to "770-11-30"} ; 不详, 770年冬
+    {:name "医和" :kind :person :from "-0590-06-30" :to "-0500-06-30"}
+    {:name "石申" :kind :person :from "-0390-06-30" :to "-0300-06-30"}
+    {:name "甘德" :kind :person :from "-0390-06-30" :to "-0300-06-30"}
+    {:name "李克" :kind :person :from "-0455-06-30" :to "-0395-06-30"}
+    {:name "扁鹊" :kind :person :from "-0406-06-30" :to "-0310-06-30"}
+
+    {:name "唐朝" :kind :dynasty :from "618-06-30" :to "907-06-30"}
+    {:name "杜甫" :kind :person :from "712-02-12" :to "770-11-30"} ; 不详, 770年冬
+    {:name "李白" :kind :person :from "701-05-19" :to "762-11-30"}
+    {:name "岑参" :kind :person :from "715-06-30" :to "770-06-30"}
+    {:name "王勃" :kind :person :from "650-06-30" :to "676-06-30"}
+    {:name "李商隐" :kind :person :from "813-06-30" :to "858-06-30"}
+    {:name "李贺" :kind :person :from "790-06-30" :to "816-06-30"}
+
+    {:name "宋朝" :kind :dynasty :from "960-02-04" :to "1279-06-30"}
+    {:name "北宋" :kind :dynasty :from "960-02-04" :to "1127-03-20"}
+
   ]
 }
