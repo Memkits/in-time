@@ -17,6 +17,46 @@
     {:name "李商隐" :kind :person :from "813-06-30" :to "858-06-30"}
     {:name "李贺" :kind :person :from "790-06-30" :to "816-06-30"}
 
+    {:name "李存勗" :kind :person :from "885-12-02" :to "926-05-15"}
+    {:name "李嗣源" :kind :person :from "867-10-10" :to "933-12-15"}
+    {:name "李璟" :kind :person :from "916-06-30" :to "961-06-30"}
+    {:name "李煜" :kind :person :from "937-08-15" :to "978-08-13"}
+    {:name "孟昶" :kind :person :from "919-12-09" :to "965-07-12"}
+
+    {:name "宋太祖赵匡胤" :kind :person :from "927-03-21" :to "976-11-21"}
+    {:name "宋仁宗赵祯" :kind :person :from "1010-05-30" :to "1063-04-30"}
+    {:name "宋徽宗赵佶" :kind :person :from "1082-11-02" :to "1135-06-04"}
+    {:name "宋高宗赵构" :kind :person :from "1107-06-12" :to "1187-11-09"}
+
+    {:name "苏轼" :kind :person :from "1037-01-08" :to "1101-08-24"}
+    {:name "苏辙" :kind :person :from "1039-03-18" :to "1112-10-25"}
+
+
+    {:name "司马光" :kind :person :from "1019-11-17" :to "1086-10-11"}
+    {:name "王安石" :kind :person :from "1021-12-18" :to "1086-5-21"}
+    {:name "晏殊" :kind :person :from "991-06-30" :to "1055-2-27"}
+    {:name "欧阳修" :kind :person :from "1007-8-1" :to "1072-9-22"}
+    {:name "蔡襄" :kind :person :from "1012-06-30" :to "1067-06-30"}
+    {:name "宗泽" :kind :person :from "1059-06-30" :to "1128-06-30"}
+    {:name "虞允文" :kind :person :from "1110-06-30" :to "1174-06-30"}
+    {:name "周必大" :kind :person :from "1126-8-5" :to "1204-12-25"}
+    {:name "陆游" :kind :person :from "1125-11-13" :to "1210-1-26"}
+    {:name "辛弃疾" :kind :person :from "1141-5-28" :to "1207-10-3"}
+    {:name "周敦颐" :kind :person :from "1017-06-30" :to "1073-7-24"}
+    {:name "张载" :kind :person :from "1020-06-30" :to "1077-12-6"}
+    {:name "邵雍" :kind :person :from "1012-1-21" :to "1077-7-27"}
+    {:name "朱熹" :kind :person :from "1130-10-22" :to "1200-4-23"}
+    {:name "陈亮" :kind :person :from "1143-10-16" :to "1194-06-30"}
+    {:name "苏洵" :kind :person :from "1009-5-22" :to "1066-5-21"}
+    {:name "秦观" :kind :person :from "1049-06-30" :to "1100-9-17"}
+    {:name "米芾" :kind :person :from "1051-06-30" :to "1107-06-30"}
+    {:name "陈抟" :kind :person :from "871-06-30" :to "989-06-30"}
+    {:name "蔡京" :kind :person :from "1047-2-14" :to "1126-8-11"}
+    {:name "秦桧" :kind :person :from "1091-1-17" :to "1155-11-18"}
+    {:name "贾似道" :kind :person :from "1213-06-30" :to "1275-06-30"}
+    {:name "慈圣光献皇后曹氏" :kind :person :from "1016-06-30" :to "1079-11-16"}
+
+
     {:name "宋朝" :kind :dynasty :from "960-02-04" :to "1279-06-30"}
     {:name "北宋" :kind :dynasty :from "960-02-04" :to "1127-03-20"}
 

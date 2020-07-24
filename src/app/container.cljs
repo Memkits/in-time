@@ -18,7 +18,15 @@
  comp-controls
  (states cursor state)
  (container
-  {}
+  {:position [20 (- js/window.innerHeight 100)]}
+  (text
+   {:text (.format (dayjs (:from state)) "YYYY-MM-DD"),
+    :position [80 20],
+    :style {:fill (hslx 0 0 100), :font-size 14}})
+  (text
+   {:text (.format (dayjs (:to state)) "YYYY-MM-DD"),
+    :position [180 20],
+    :style {:fill (hslx 0 0 100), :font-size 14}})
   (comp-slider
    (>> states :from)
    {:title "From",
@@ -26,12 +34,8 @@
     :unit (* a-day 1000),
     :round? true,
     :max (:to state),
-    :position [220 20],
+    :position [80 60],
     :on-change (fn [v d!] (d! cursor (assoc state :from v)))})
-  (text
-   {:text (.format (dayjs (:from state)) "YYYY-MM-DD"),
-    :position [400 20],
-    :style {:fill (hslx 0 0 100), :font-size 14}})
   (comp-slider
    (>> states :to)
    {:title "To",
@@ -39,19 +43,15 @@
     :unit (* a-day 1000),
     :round? true,
     :max now-time,
-    :position [600 20],
-    :on-change (fn [v d!] (d! cursor (assoc state :to v)))})
-  (text
-   {:text (.format (dayjs (:to state)) "YYYY-MM-DD"),
-    :position [480 20],
-    :style {:fill (hslx 0 0 100), :font-size 14}})))
+    :position [240 60],
+    :on-change (fn [v d!] (d! cursor (assoc state :to v)))})))
 
 (defcomp
  comp-records
  (current-records from to)
  (let [whole-width (- js/window.innerWidth 80)]
    (container
-    {:position [40 60]}
+    {:position [60 28]}
     (graphics
      {:ops [(g :line-style {:color (hslx 0 0 20), :width 1, :alpha 1})
             (g :move-to [0 0])
@@ -65,7 +65,7 @@
           (sort-by :from)
           (map-indexed
            (fn [idx record]
-             (let [y (* 16 idx)
+             (let [y (* 12 idx)
                    t1 (:from record)
                    t2 (:to record)
                    x1 (max 0 (* whole-width (/ (- t1 from) (- to from))))
