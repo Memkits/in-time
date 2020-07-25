@@ -48,8 +48,10 @@
 
 (defcomp
  comp-records
- (current-records from to)
- (let [whole-width (- js/window.innerWidth 80)]
+ (states current-records from to)
+ (let [cursor (:cursor states)
+       state (or (:data states) {:selected nil})
+       whole-width (- js/window.innerWidth 80)]
    (container
     {:position [60 28]}
     (graphics
@@ -69,17 +71,23 @@
                    t1 (:from record)
                    t2 (:to record)
                    x1 (max 0 (* whole-width (/ (- t1 from) (- to from))))
-                   x2 (* whole-width (min 1 (/ (- t2 from) (- to from))))]
+                   x2 (* whole-width (min 1 (/ (- t2 from) (- to from))))
+                   selected? (= (:name record) (:selected state))]
                [idx
                 (container
                  {}
+                 (if selected?
+                   (rect {:position [(- x1 100) (+ 6 y)], :size [600 2], :fill (hslx 0 0 10)}))
                  (rect
                   {:position [x1 y],
                    :size [(- x2 x1) (case (:kind record) :person 10 :dynasty 12 8)],
                    :fill (case (:kind record)
                      :person (hslx 200 80 30)
                      :dynasty (hslx 100 80 30)
-                     (hslx 0 0 40))})
+                     (hslx 0 0 40)),
+                   :on {:pointertap (fn [e d!]
+                          (println (assoc state :selected (:name record)))
+                          (d! cursor (assoc state :selected (:name record))))}})
                  (text
                   {:text (str
                           (:name record)
@@ -120,5 +128,5 @@
                                     (> (:to record) (:from state))))))]
    (container
     {}
-    (comp-records current-records (:from state) (:to state))
+    (comp-records (>> states :records) current-records (:from state) (:to state))
     (comp-controls states cursor state))))
