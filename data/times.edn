@@ -160,5 +160,67 @@
     {:name "约翰·惠勒—美国" :kind :person :from "1911-06-30" :to "2008-06-30"}
     {:name "吴健雄—中国，美国" :kind :person :from "1912-06-30" :to "1997-06-30"}
     {:name "林家翘—中国" :kind :person :from "1916-06-30" :to "2013-06-30"}
+
+    {:name "刘歆" :kind :person :from "-50" :to "－23"}
+    {:name "张衡" :kind :person :from "78" :to "139"}
+    {:name "刘徽" :kind :person :from "225" :to "295"}
+    {:name "祖冲之" :kind :person :from "429" :to "500"}
+    {:name "李淳风" :kind :person :from "602" :to "670"}
+    {:name "杨辉" :kind :person :from "1238" :to "1298"}
+    {:name "郭守敬" :kind :person :from "1231" :to "1316"}
+    {:name "朱世杰" :kind :person :from "1249" :to "1314"}
+    {:name "秦九韶" :kind :person :from "1208" :to "1261"}
+    {:name "程大位" :kind :person :from "1533" :to "1606"}
+    {:name "徐光启" :kind :person :from "1562-4-24" :to "1633-11-8"}
+    {:name "李善兰" :kind :person :from "1810" :to "1882"}
+    {:name "华蘅芳" :kind :person :from "1833" :to "1902"}
+    {:name "梅文鼎" :kind :person :from "1633" :to "1721"}
+    {:name "陈省身" :kind :person :from "1911-10-28" :to "2004-12-3"}
+    {:name "华罗庚" :kind :person :from "1910-11-12" :to "1985-6-12"}
+    {:name "苏步青" :kind :person :from "1902-9-23" :to "2003-3-17"}
+    {:name "吴文俊" :kind :person :from "1919-5-12" :to "2017-5-7"}
+    {:name "陈景润" :kind :person :from "1933-5-22" :to "1996-3-19"}
+    {:name "朱尔·亨利·庞加莱" :kind :person :from "1854-4-29" :to "1912-7-17"}
+    {:name "纪尧姆·弗朗索瓦·安托万，洛必达侯爵" :kind :person :from "1661" :to "1704-2-2"}
+    {:name "奥古斯丁·路易·柯西" :kind :person :from "1789-8-21" :to "1857-5-23"}
+    {:name "让·巴普蒂斯·约瑟夫·傅里叶男爵" :kind :person :from "1768-3-21" :to "1830-5-16"}
+    {:name "皮埃尔-西蒙，拉普拉斯侯爵" :kind :person :from "1749-3-23" :to "1827-3-5"}
+    {:name "布莱兹‧帕斯卡" :kind :person :from "B1623-6-19" :to "1662-8-19"}
+    {:name "皮埃尔·德·费马" :kind :person :from "1607" :to "1665-1-12"}
+    {:name "约瑟夫·拉格朗日伯爵" :kind :person :from "1736-1-25" :to "1813-4-10"}
+    {:name "皮埃尔-西蒙，拉普拉斯侯爵" :kind :person :from "1749-3-23" :to "1827-3-5"}
+    {:name "昂利·莱昂·勒贝格" :kind :person :from "1875-6-28" :to "1941-7-26"}
+    {:name "勒内·笛卡尔" :kind :person :from "1596-3-31" :to "1650-2-11"}
+    {:name "马兰·梅森" :kind :person :from "1588-9-8" :to "1648-9-1"}
+    {:name "让·勒朗·达朗贝尔" :kind :person :from "1717-11-16" :to "1783-10-29"}
+    {:name "西莫恩·德尼·泊松男爵" :kind :person :from "1781-6-21" :to "1840-4-25"}
+    {:name "约翰·卡尔·弗里德里希·高斯" :kind :person :from "1777-4-30" :to "1855-2-23"}
+    {:name "约翰内斯·开普勒" :kind :person :from "1571-12-27" :to "1630-11-15"}
+    {:name "约翰·彼得·古斯塔夫·勒热纳·狄利克雷" :kind :person :from "1805-2-13" :to "1859-5-5"}
+    {:name "费利克斯·克莱因" :kind :person :from "1849-4-25" :to "1925-6-22"}
+    {:name "克里斯蒂安·哥德巴赫" :kind :person :from "1690-3-18" :to "1764-11-20"}
+    {:name "库尔特·弗雷德里希·哥德尔" :kind :person :from "1906-4-28" :to "1978-1-14"}
+    {:name "伽利略·伽利莱" :kind :person :from "1564-2-15" :to "1642-1-8"}
+    {:name "列奥纳多·费波那契" :kind :person :from "1175" :to "1250"}
+    {:name "吉罗拉莫·卡尔达诺" :kind :person :from "1501-9-24" :to "1576-9-21"}
+    {:name "朱塞佩·皮亚诺" :kind :person :from "1858-8-27" :to "1932-4-20"}
+    {:name "米利都的泰勒斯" :kind :person :from "-624" :to "-546"}
+    {:name "毕达哥拉斯" :kind :person :from "-570" :to "-495"}
+    {:name "多克索斯" :kind :person :from "-408" :to "-355"}
+    {:name "亚里士多德" :kind :person :from "-384-6-19" :to "-322-3-7"}
+    {:name "欧几里得" :kind :person :from "-325" :to "-265"}
+    {:name "阿基米德" :kind :person :from "-287" :to "-212"}
+    {:name "克劳狄乌斯·托勒密" :kind :person :from "100" :to "170"}
+    {:name "亚历山大港的丢番图" :kind :person :from "200" :to "284"}
+    {:name "艾伦·麦席森·图灵" :kind :person :from "1912-6-23" :to "1954-6-7"}
+    {:name "伯特兰·亚瑟·威廉·罗素" :kind :person :from "1872-5-18" :to "1970-2-2"}
+    {:name "威廉·卢云·哈密顿爵士" :kind :person :from "1805-8-4" :to "1865-9-2"}
+    {:name "约翰·冯·诺伊曼" :kind :person :from "1903-12-28" :to "1957-2-8"}
+    {:name "克里斯蒂安·惠更斯" :kind :person :from "1629-4-14" :to "1695-7-8"}
+    {:name "雅各布·伯努利" :kind :person :from "1654-12-27" :to "1705-8-16"}
+    {:name "丹尼尔·伯努利" :kind :person :from "1700-2-8" :to "1782-3-17"}
+    {:name "莱昂哈德·欧拉" :kind :person :from "1707-4-15" :to "1783-9-18"}
+    {:name "小平邦彦" :kind :person :from "1915-3-16" :to "1997-7-26"}
+
   ]
 }
