@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "calcit calcit.cirru js",
     "build": "yarn compile && vite build",
-    "dev": "yarn compile && concurrently --kill-others \"calcit calcit.cirru js -w\" \"vite\""
+    "dev": "yarn compile && vite"
   },
   "packageManager": "yarn@4.18.0",
   "repository": {
@@ -16,7 +16,6 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "devDependencies": {
-    "concurrently": "^10.0.5",
     "mobile-detect": "^1.4.5",
     "vite": "^8.3.1"
   },
