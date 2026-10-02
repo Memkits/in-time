@@ -4,7 +4,8 @@
   "description": "a PIXI DSL in ClojureScript",
   "main": "index.js",
   "scripts": {
-    "compile": "calcit calcit.cirru js",
+    "compile": "calcit",
+    "watch": "calcit -w",
     "build": "yarn compile && vite build",
     "dev": "yarn compile && vite"
   },
