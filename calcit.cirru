@@ -49,7 +49,9 @@
                       < (:from record) (:to state)
                       > (:to record) (:from state)
               container ({})
-                comp-records (>> states :records) current-records (:from state) (:to state)
+                comp-records
+                  decode-map-as (>> states :records) (:: 'Map 'Tag 'Dynamic)
+                  , current-records (:from state) (:to state)
                 comp-controls states cursor state
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'phlox.schema/PhloxElement)
@@ -81,7 +83,8 @@
                   :max $ :to state
                   :position $ [] 80 60
                   :on-change $ fn (v d!)
-                    d! $ :: :states cursor $ assoc state :from v
+                    d! $ :: :states cursor $ assoc state :from (decode-map-as v 'Number)
+                    , &unit
               comp-slider (>> states :to)
                 {} (:title |To)
                   :value $ :to state
@@ -90,7 +93,8 @@
                   :max now-time
                   :position $ [] 240 60
                   :on-change $ fn (v d!)
-                    d! $ :: :states cursor $ assoc state :to v
+                    d! $ :: :states cursor $ assoc state :to (decode-map-as v 'Number)
+                    , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'phlox.schema/PhloxElement)
             :args $ [] (:: 'Map 'Tag 'Dynamic) (:: 'List 'Dynamic) 'app.schema/RangeState
@@ -129,8 +133,10 @@
                             / (- t1 from) (- to from)
                           x2 $ * whole-width $ &min 1
                             / (- t2 from) (- to from)
-                          selected? $ = (:name record)
-                            .unwrap-or (:selected state) nil
+                          selected? $ match (:selected state)
+                            (:some selected)
+                              = (:name record) selected
+                            (:none) false
                         [] idx $ container ({})
                           if selected? $ rect $ {}
                             :position $ [] (- x1 100) (+ 6 y)
@@ -139,15 +145,17 @@
                           rect $ {}
                             :position $ [] x1 y
                             :size $ [] (- x2 x1)
-                              case-default (:kind record) 8 (:person 10) (:dynasty 12)
-                            :fill $ case-default (:kind record) (hslx 0 0 40)
+                              match (:kind record) (:person 10) (:dynasty 12) (_ 8)
+                            :fill $ match (:kind record)
                               :person $ hslx 200 80 30
                               :dynasty $ hslx 100 80 30
+                              _ $ hslx 0 0 40
                             :on $ {} $ :pointertap
                               fn (e d!)
                                 println $ assoc state :selected $ Option :some (:name record)
                                 d! $ :: :states cursor $ assoc state :selected
                                   Option :some $ :name record
+                                , &unit
                           text $ {}
                             :text $ str (:name record) "| " (format-time t1) |~ $ format-time t2
                             :position $ [] (- x1 20) (+ y 1)
@@ -161,7 +169,9 @@
         'db $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def db
             map
-              :times $ parse-cirru-edn-as (inline |data/times.cirru) 'app.schema/TimelineSource
+              :times $ decode-map-as
+                parse-cirru-edn $ inline |data/times.cirru
+                , 'app.schema/TimelineSource
               fn (record)
                 schema/TimeRecord :name (:name record) :kind (:kind record) :from
                   time->number $ :from record
@@ -204,14 +214,14 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.container
           :require
-            phlox.core :refer $ [] defcomp >> hslx rect text container graphics create-list g
-            phlox.comp.slider :refer $ [] comp-slider
+            phlox.core :refer $ defcomp >> hslx rect text container graphics create-list g
+            phlox.comp.slider :refer $ comp-slider
             app.schema :as schema
             |../entry/browser.mjs :as browser
     'app.main $ %{} 'FileEntry
       :defs $ {}
         '*store $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defatom *store schema/store
+          :code $ quote $ defref *store schema/store
           :examples $ []
           :schema $ :: 'Ref $ :: 'Map 'Tag 'Dynamic
         'dispatch! $ %{} 'CodeEntry (:doc |)
@@ -224,6 +234,7 @@
               reset! *store $ updater @*store op
                 decode-map-as (shortid/generate) 'String
                 decode-map-as (js/Date.now) 'Number
+              , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Enum
@@ -231,15 +242,23 @@
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             whenFontsReady $ fn () $ render-app!
-            add-watch *store :change $ fn (s p) (render-app!)
+            add-watch! *store :change $ fn (s p)
+              hint-fn $ {}
+                :args $ [] (:: 'Map 'Tag 'Dynamic) (:: 'Map 'Tag 'Dynamic)
+                :return 'Unit
+              render-app!
             println "|App Started"
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
             :features $ #{} :js-ffi
         'reload! $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn reload! () (println "|Code updated") (clear-phlox-caches!) (remove-watch *store :change)
-            add-watch *store :change $ fn (s p) (render-app!)
+          :code $ quote $ defn reload! () (println "|Code updated") (clear-phlox-caches!) (remove-watch! *store :change)
+            add-watch! *store :change $ fn (s p)
+              hint-fn $ {}
+                :args $ [] (:: 'Map 'Tag 'Dynamic) (:: 'Map 'Tag 'Dynamic)
+                :return 'Unit
+              render-app!
             render! (comp-container @*store) dispatch! $ {} $ :swap? true
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -253,12 +272,12 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require (|shortid :as shortid)
-            phlox.core :refer $ [] render! clear-phlox-caches!
-            app.container :refer $ [] comp-container
+            phlox.core :refer $ render! clear-phlox-caches!
+            app.container :refer $ comp-container
             app.schema :as schema
-            app.config :refer $ [] dev?
-            app.updater :refer $ [] updater
-            |../entry/browser.mjs :refer $ [] whenFontsReady
+            app.config :refer $ dev?
+            app.updater :refer $ updater
+            |../entry/browser.mjs :refer $ whenFontsReady
     'app.schema $ %{} 'FileEntry
       :defs $ {}
         'Op $ %{} 'CodeEntry (:doc |)
@@ -307,13 +326,18 @@
             :args $ [] 'Enum
         'normalize-range $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn normalize-range (raw)
-            if (struct? raw) (assert-type raw 'app.schema/RangeState) (decode-map-as raw 'app.schema/RangeState)
+            if (struct? raw)
+              struct-match raw (RangeState value value)
+                _ _ $ raise |Expected-RangeState
+              decode-map-as raw 'app.schema/RangeState
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'app.schema/RangeState)
             :args $ [] 'Dynamic
         'normalize-selection $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn normalize-selection (raw)
-            if (struct? raw) (assert-type raw 'app.schema/SelectionState)
+            if (struct? raw)
+              struct-match raw (SelectionState value value)
+                _ _ $ raise |Expected-SelectionState
               let
                   data $ decode-map-as raw $ :: 'Map 'Tag 'Dynamic
                   selected $ .unwrap-or (get data :selected) nil
@@ -352,4 +376,4 @@
             :return $ :: 'Map 'Tag 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater
-          :require $ phlox.cursor :refer $ [] update-states
+          :require $ phlox.cursor :refer $ update-states
