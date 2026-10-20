@@ -32,10 +32,11 @@ jobs:
         with:
           tools: calcit,caps
           caps-version: "0.1.1"
+          deps-file: deps.cirru
       - name: Install immutable dependencies
         run: |
           set -euo pipefail
-          caps --ci
+          caps --ci --strict
           yarn install --immutable
           caps verify --toolchain
       - name: Check canonical Calcit and types
@@ -47,8 +48,9 @@ jobs:
           test ! -e package.cirru
           calcit edit format
           git diff --exit-code -- calcit.cirru
-          calcit --check-only
-          calcit analyze check-public --ns app.container --ns app.config --ns app.main --ns app.schema --ns app.updater --summary-only --format json
+          calcit --check-only --all-defs
+          calcit fix --workflow strict --verify --format json
+          calcit --check-only --ns app.container --ns app.config --ns app.main --ns app.schema --ns app.updater --summary-only --format json
       - name: Select frontend CDN path
         id: asset-path
         env:
