@@ -10,7 +10,7 @@ Previews http://repo.memkits.org/in-time/ .
 
 Workflow https://github.com/mvc-works/phlox-workflow
 
-Use paired Calcit/procs 0.30.1-alpha.5, Node.js 24 and Yarn 4.18.0 with canonical
+Use paired formal Calcit/procs 0.30.1, Node.js 24 and Yarn 4.18.0 with canonical
 `calcit.cirru` / `deps.cirru`. Run `caps --ci --strict`, `yarn install --immutable`,
 then `yarn dev` or `yarn build`. Development compiles once before starting Vite.
 Run `yarn watch` in another terminal for live compilation;
@@ -27,9 +27,10 @@ PRs only check and build. Original server `dist/*` and destination remain.
 CI keeps canonical formatting, strict entry/public contracts and real builds,
 without extra upload checkers or permanent migration test suites.
 
-CI 保留工具链一致性、规范格式和五个业务 namespace 公开定义检查，并检查全部定义及完整 strict workflow。同一 PR/生产队列使用 `queue: max`；上传前确认提交仍是当前 main，过期提交同时跳过 COS 和服务器同步。预览 PR/run/attempt 及原生产/服务器路径不变。编译直接使用默认 JS 入口 `calcit`，监听使用 `calcit -w`。模块使用正式 Phlox 0.7.15；CLI/npm 使用已完成发布的配对候选，因为正式 0.30.1 release 尚无 CLI 资产。
+CI 保留工具链一致性、规范格式和五个业务 namespace 公开定义检查，并检查全部定义及完整 strict workflow。同一 PR/生产队列使用 `queue: max`；上传前确认提交仍是当前 main，过期提交同时跳过 COS 和服务器同步。原生产/服务器路径不变。编译直接使用默认 JS 入口 `calcit`，监听使用 `calcit -w`。模块使用正式 Phlox 0.7.17；CLI/npm 精确配对正式0.30.1，由Linux CI验收，不用本地旧CLI编译正式图。
+PR不上传或部署，仅保留相对路径的同一次构建artifact供本地验收；不能把PR构建通过当作COS上传成功。生产继续使用绝对CDN路径。
 
-### 0.30.1 候选迁移说明
+### 0.30.1 迁移说明
 
 历史数据文件仍为原 Map：先解析，再通过 `decode-map-as` 验证 TimelineSource
 及其记录，避免将 Map 当作 Struct 文本直接读取而首屏空白。两个状态归一化
@@ -42,8 +43,10 @@ Number，选择状态显式匹配 Option。Ref watcher 使用当前 API 与真�
 并在真实浏览器验收记录选择和两个滑块。仍有异构组件状态和 Phlox props/callback
 边界，不声称零 Dynamic 债务，不增加基线、checker 或强转。
 
-默认居中画布仍会令下方控件超出初始可视区域，见 [#13](https://github.com/Memkits/in-time/issues/13)。
-滑块验收使用未提交的本地页面调用 Phlox 既有视口平移接口；不等于默认布局已修复。
+本轮针对 [#13](https://github.com/Memkits/in-time/issues/13) 明确应用使用左上角布局：
+根容器抵消Phlox默认中心偏移，保留原记录/滑块坐标。字体就绪后注册单个resize监听，
+resize时清除组件缓存并重新计算视口尺寸；热更新替换原监听，不重复注册。
+不修改共享Phlox原点、不注入临时平移页，不改日期、缩放公式或滑块单位。
 公开 widget 类型合同改进继续跟踪 [Phlox #72](https://github.com/Phlox-GL/phlox/issues/72)。
 
 ### License

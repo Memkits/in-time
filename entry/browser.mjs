@@ -12,6 +12,14 @@ export const viewportWidth = () => window.innerWidth;
 export const viewportHeight = () => window.innerHeight;
 export const now = () => Date.now();
 
+let viewportListener;
+
+export function watchViewport(callback) {
+  if (viewportListener) window.removeEventListener("resize", viewportListener);
+  viewportListener = () => callback();
+  window.addEventListener("resize", viewportListener);
+}
+
 export function whenFontsReady(callback) {
   Promise.all(["Josefin Sans", "Hind"].map((name) => new FontFaceObserver(name).load())).then(() => callback());
 }
