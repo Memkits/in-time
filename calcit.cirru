@@ -48,7 +48,10 @@
                     and
                       < (:from record) (:to state)
                       > (:to record) (:from state)
-              container ({})
+              container
+                {} $ :position $ []
+                  negate $ * 0.5 $ decode-map-as (browser/viewportWidth) 'Number
+                  negate $ * 0.5 $ decode-map-as (browser/viewportHeight) 'Number
                 comp-records
                   decode-map-as (>> states :records) (:: 'Map 'Tag 'Dynamic)
                   , current-records (:from state) (:to state)
@@ -56,6 +59,7 @@
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'phlox.schema/PhloxElement)
             :args $ [] $ :: 'Map 'Tag 'Dynamic
+            :features $ #{} :js-ffi
         'comp-controls $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-controls (states cursor state)
             container
@@ -241,13 +245,19 @@
             :features $ #{} :js-ffi
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
-            whenFontsReady $ fn () $ render-app!
+            whenFontsReady $ fn () (render-app!) (watchViewport on-viewport-change!)
             add-watch! *store :change $ fn (s p)
               hint-fn $ {}
                 :args $ [] (:: 'Map 'Tag 'Dynamic) (:: 'Map 'Tag 'Dynamic)
                 :return 'Unit
               render-app!
             println "|App Started"
+          :examples $ []
+          :schema $ :: 'Fn $ {} (:return 'Unit)
+            :args $ []
+            :features $ #{} :js-ffi
+        'on-viewport-change! $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn on-viewport-change! () (clear-phlox-caches!) (render-app!) &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
@@ -259,16 +269,19 @@
                 :args $ [] (:: 'Map 'Tag 'Dynamic) (:: 'Map 'Tag 'Dynamic)
                 :return 'Unit
               render-app!
+            watchViewport on-viewport-change!
             render! (comp-container @*store) dispatch! $ {} $ :swap? true
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
+            :features $ #{} :js-ffi
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             render! (comp-container @*store) dispatch! $ {}
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
+            :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require (|shortid :as shortid)
@@ -277,7 +290,7 @@
             app.schema :as schema
             app.config :refer $ dev?
             app.updater :refer $ updater
-            |../entry/browser.mjs :refer $ whenFontsReady
+            |../entry/browser.mjs :refer $ whenFontsReady watchViewport
     'app.schema $ %{} 'FileEntry
       :defs $ {}
         'Op $ %{} 'CodeEntry (:doc |)
