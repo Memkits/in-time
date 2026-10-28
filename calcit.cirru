@@ -141,31 +141,36 @@
                             (:some selected)
                               = (:name record) selected
                             (:none) false
-                        [] idx $ container ({})
-                          if selected? $ rect $ {}
-                            :position $ [] (- x1 100) (+ 6 y)
-                            :size $ [] 600 2
-                            :fill $ hslx 0 0 10
-                          rect $ {}
-                            :position $ [] x1 y
-                            :size $ [] (- x2 x1)
-                              match (:kind record) (:person 10) (:dynasty 12) (_ 8)
-                            :fill $ match (:kind record)
-                              :person $ hslx 200 80 30
-                              :dynasty $ hslx 100 80 30
-                              _ $ hslx 0 0 40
-                            :on $ {} $ :pointertap
-                              fn (e d!)
-                                println $ assoc state :selected $ Option :some (:name record)
-                                d! $ :: :states cursor $ assoc state :selected
-                                  Option :some $ :name record
-                                , &unit
-                          text $ {}
-                            :text $ str (:name record) "| " (format-time t1) |~ $ format-time t2
-                            :position $ [] (- x1 20) (+ y 1)
-                            :style $ {}
-                              :fill $ hslx 0 0 70
-                              :font-size 8
+                        [] idx $ create-list :container ({})
+                          .concat
+                            if selected?
+                              [] $ [] 0 $ rect
+                                {}
+                                  :position $ [] (- x1 100) (+ 6 y)
+                                  :size $ [] 600 2
+                                  :fill $ hslx 0 0 10
+                              []
+                            []
+                              [] 1 $ rect $ {}
+                                :position $ [] x1 y
+                                :size $ [] (- x2 x1)
+                                  match (:kind record) (:person 10) (:dynasty 12) (_ 8)
+                                :fill $ match (:kind record)
+                                  :person $ hslx 200 80 30
+                                  :dynasty $ hslx 100 80 30
+                                  _ $ hslx 0 0 40
+                                :on $ {} $ :pointertap
+                                  fn (e d!)
+                                    println $ assoc state :selected $ Option :some (:name record)
+                                    d! $ :: :states cursor $ assoc state :selected
+                                      Option :some $ :name record
+                                    , &unit
+                              [] 2 $ text $ {}
+                                :text $ str (:name record) "| " (format-time t1) |~ $ format-time t2
+                                :position $ [] (- x1 20) (+ y 1)
+                                :style $ {}
+                                  :fill $ hslx 0 0 70
+                                  :font-size 8
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'phlox.schema/PhloxElement)
             :args $ [] (:: 'Map 'Tag 'Dynamic) (:: 'List 'app.schema/TimeRecord) 'Number 'Number
