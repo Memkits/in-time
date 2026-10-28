@@ -10,7 +10,7 @@ Previews http://repo.memkits.org/in-time/ .
 
 Workflow https://github.com/mvc-works/phlox-workflow
 
-Use paired formal Calcit/procs 0.30.1, Node.js 24 and Yarn 4.18.0 with canonical
+Use paired formal Calcit/procs 0.31.0, Node.js 24 and Yarn 4.18.0 with canonical
 `calcit.cirru` / `deps.cirru`. Run `caps --ci --strict`, `yarn install --immutable`,
 then `yarn dev` or `yarn build`. Development compiles once before starting Vite.
 Run `yarn watch` in another terminal for live compilation;
@@ -27,10 +27,21 @@ PRs only check and build. Original server `dist/*` and destination remain.
 CI keeps canonical formatting, strict entry/public contracts and real builds,
 without extra upload checkers or permanent migration test suites.
 
-CI 保留工具链一致性、规范格式和五个业务 namespace 公开定义检查，并检查全部定义及完整 strict workflow。同一 PR/生产队列使用 `queue: max`；上传前确认提交仍是当前 main，过期提交同时跳过 COS 和服务器同步。原生产/服务器路径不变。编译直接使用默认 JS 入口 `calcit`，监听使用 `calcit -w`。模块使用正式 Phlox 0.7.17；CLI/npm 精确配对正式0.30.1，由Linux CI验收，不用本地旧CLI编译正式图。
+CI 保留工具链一致性、规范格式和五个业务 namespace 公开定义检查，并检查全部定义及完整 strict workflow。同一 PR/生产队列使用 `queue: max`；上传前确认提交仍是当前 main，过期提交同时跳过 COS 和服务器同步。原生产/服务器路径不变。编译直接使用默认 JS 入口 `calcit`，监听使用 `calcit -w`。模块使用已发布的 Phlox 0.8.0-alpha.3（仍为 alpha）；CLI/npm 精确配对正式0.31.0。本轮使用已授权的本地官方0.31.0验证，并保留Linux CI。
 PR不上传或部署，仅保留相对路径的同一次构建artifact供本地验收；不能把PR构建通过当作COS上传成功。生产继续使用绝对CDN路径。
 
-### 0.30.1 迁移说明
+### 本轮 0.31.0 使用者影响
+
+需同步 CLI/procs 和模块图后重启开发服务并完整刷新；Phlox 的 alpha tag 不视为稳定版。
+选中高亮改用已有 create-list 表达可选子节点，高亮/记录条/文字保持原键0/1/2；
+未选中时省略高亮，不插入占位节点，不改变记录条与文字的键、顺序、坐标或事件。
+原日期数据、范围归一化、滑块单位、resize监听及左上角布局不变。
+不新增测试框架、验证脚本、强转或类型预算，不改生产路径或发版。
+本地187个定义、30个公开定义、完整strict、immutable与构建通过；原项目无附加测试。
+实际记录选择、高亮、两个滑块与刷新恢复默认范围通过。IAB中曾短暂看不到控制区，
+随后恢复并完成拖动；不据此宣称Phlox可见性问题已解决，本轮未重新验证resize/HMR。
+
+### 0.30.1 历史迁移说明
 
 历史数据文件仍为原 Map：先解析，再通过 `decode-map-as` 验证 TimelineSource
 及其记录，避免将 Map 当作 Struct 文本直接读取而首屏空白。两个状态归一化
