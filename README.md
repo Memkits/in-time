@@ -6,9 +6,9 @@ In time
 
 Previews http://repo.memkits.org/in-time/ .
 
-### 0.32.0 迁移候选对使用者的影响
+### 0.32.1 迁移候选对使用者的影响
 
-CLI 与 `@calcit/procs` 配对正式 `0.32.0`，需要重新生成 JS 并刷新页面。
+CLI 与 `@calcit/procs` 配对正式 `0.32.1`，需要重新生成 JS 并刷新页面。
 Phlox `0.8.0` 当前使用本地候选图验收，其正式发布依赖整图和 PR CI 尚待验证，不能据此部署。
 官方工具转换 6 处类型写法，30 个定义 schema 不变；历史日期数据、范围计算和布局逻辑不变。
 全定义、五个业务 namespace、完整 strict、不可变安装和构建通过。原项目无附带测试，
@@ -23,7 +23,7 @@ npm 包年龄门禁设为一小时，删除旧 alpha 白名单。不新增验证
 
 Workflow https://github.com/mvc-works/phlox-workflow
 
-Use paired formal Calcit/procs 0.32.0, Node.js 24 and Yarn 4.18.0 with canonical
+Use paired formal Calcit/procs 0.32.1, Node.js 24 and Yarn 4.18.0 with canonical
 `calcit.cirru` / `deps.cirru`. Run `caps --ci --strict`, `yarn install --immutable`,
 then `yarn dev` or `yarn build`. Development compiles once before starting Vite.
 Run `yarn watch` in another terminal for live compilation;
@@ -40,8 +40,11 @@ PRs only check and build. Original server `dist/*` and destination remain.
 CI keeps canonical formatting, strict entry/public contracts and real builds,
 without extra upload checkers or permanent migration test suites.
 
-CI 保留工具链一致性、规范格式和五个业务 namespace 公开定义检查，并检查全部定义及完整 strict workflow。同一 PR/生产队列使用 `queue: max`；上传前确认提交仍是当前 main，过期提交同时跳过 COS 和服务器同步。原生产/服务器路径不变。编译直接使用默认 JS 入口 `calcit`，监听使用 `calcit -w`。本轮模块候选和正式图限制见文首；CLI/npm 精确配对正式0.32.0，并保留Linux CI。
+CI 保留工具链一致性、规范格式和五个业务 namespace 公开定义检查，并检查全部定义及完整 strict workflow。同一 PR/生产队列使用 `queue: max`；上传前确认提交仍是当前 main，过期提交同时跳过 COS 和服务器同步。原生产/服务器路径不变。编译直接使用默认 JS 入口 `calcit`，监听使用 `calcit -w`。本轮模块候选和正式图限制见文首；CLI/npm 精确配对正式0.32.1，并保留Linux CI。
 PR不上传或部署，仅保留相对路径的同一次构建artifact供本地验收；不能把PR构建通过当作COS上传成功。生产继续使用绝对CDN路径。
+
+0.32.1 补丁复核已通过原门禁与构建；页面验收沿用此前 0.32.0 的记录。
+官方 patch 未改运行时源码，本轮未重复浏览器交互，不将静态复核表述为新页面验收。
 
 ### 历史：0.31.0 使用者影响
 
