@@ -14,12 +14,12 @@
           :code $ quote $ def dev?
             = |env $ .unwrap-or (get-env |mode) |release
           :examples $ []
-          :schema $ :: 'Bool
+          :schema $ quote Bool
         'site $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def site
             {} (:dev-ui |http://localhost:8100/main-fonts.css) (:release-ui |http://cdn.tiye.me/favored-fonts/main-fonts.css) (:cdn-url |https://cos-sh.tiye.me/Memkits/in-time/) (:title "|In time") (:icon |http://cdn.tiye.me/logo/memkits.png) (:storage-key |in-time)
           :examples $ []
-          :schema $ :: 'Map 'Tag 'String
+          :schema $ quote $ Map Tag String
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.config
     'app.container $ %{} 'FileEntry
@@ -27,11 +27,11 @@
         'a-day $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-day (* 1000 3600 24)
           :examples $ []
-          :schema $ :: 'Number
+          :schema $ quote Number
         'a-year $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def a-year (* a-day 365.2425)
           :examples $ []
-          :schema $ :: 'Number
+          :schema $ quote Number
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-container (store)
             let
@@ -57,9 +57,7 @@
                   , current-records (:from state) (:to state)
                 comp-controls states cursor state
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'phlox.schema/PhloxElement)
-            :args $ [] $ :: 'Map 'Tag 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (Map Tag Dynamic) (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-controls $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-controls (states cursor state)
             container
@@ -100,9 +98,7 @@
                     d! $ :: :states cursor $ assoc state :to (decode-map-as v 'Number)
                     , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'phlox.schema/PhloxElement)
-            :args $ [] (:: 'Map 'Tag 'Dynamic) (:: 'List 'Dynamic) 'app.schema/RangeState
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (Map Tag Dynamic) (List Dynamic) app.schema/RangeState (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-records $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-records (states current-records from to)
             let
@@ -172,9 +168,7 @@
                                   :fill $ hslx 0 0 70
                                   :font-size 8
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'phlox.schema/PhloxElement)
-            :args $ [] (:: 'Map 'Tag 'Dynamic) (:: 'List 'app.schema/TimeRecord) 'Number 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (Map Tag Dynamic) (List app.schema/TimeRecord) Number Number (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'db $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def db
             map
@@ -186,40 +180,33 @@
                   time->number $ :from record
                   , :to $ time->number $ :to record
           :examples $ []
-          :schema $ :: 'List 'app.schema/TimeRecord
+          :schema $ quote $ List app.schema/TimeRecord
         'format-time $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn format-time (x)
             decode-map-as (browser/formatDate x) 'String
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number (-> String) (:features :js-ffi)
         'inline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defmacro inline (path)
             read-file $ decode-map-as path 'String
           :examples $ []
-          :schema $ :: 'Macro $ {}
-            :capabilities $ #{} :fs-read
-            :expansion $ :: 'Expr 'String
-            :required $ [] $ :: 'Expr 'String
+          :schema $ quote $ Macro (Expr String)
+            -> $ Expr String
+            :capabilities :fs-read
         'now-time $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def now-time (read-now)
           :examples $ []
-          :schema $ :: 'Number
+          :schema $ quote Number
         'read-now $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-now ()
             decode-map-as (browser/now) 'Number
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Number) (:features :js-ffi)
         'time->number $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn time->number (x)
             decode-map-as (browser/dateToNumber x) 'Number
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn String (-> Number) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.container
           :require
@@ -232,7 +219,7 @@
         '*store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *store schema/store
           :examples $ []
-          :schema $ :: 'Ref $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Ref (Map Tag Dynamic)
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (raw)
             let
@@ -245,48 +232,34 @@
                 decode-map-as (js/Date.now) 'Number
               , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Enum
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Enum (-> Unit) (:features :js-ffi)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             whenFontsReady $ fn () (render-app!) (watchViewport on-viewport-change!)
             add-watch! *store :change $ fn (s p)
-              hint-fn $ {}
-                :args $ [] (:: 'Map 'Tag 'Dynamic) (:: 'Map 'Tag 'Dynamic)
-                :return 'Unit
+              hint-fn $ Fn (Map Tag Dynamic) (Map Tag Dynamic) (-> Unit)
               render-app!
             println "|App Started"
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'on-viewport-change! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn on-viewport-change! () (clear-phlox-caches!) (render-app!) &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! () (println "|Code updated") (clear-phlox-caches!) (remove-watch! *store :change)
             add-watch! *store :change $ fn (s p)
-              hint-fn $ {}
-                :args $ [] (:: 'Map 'Tag 'Dynamic) (:: 'Map 'Tag 'Dynamic)
-                :return 'Unit
+              hint-fn $ Fn (Map Tag Dynamic) (Map Tag Dynamic) (-> Unit)
               render-app!
             watchViewport on-viewport-change!
             render! (comp-container @*store) dispatch! $ {} $ :swap? true
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             render! (comp-container @*store) dispatch! $ {}
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require (|shortid :as shortid)
@@ -300,32 +273,34 @@
       :defs $ {}
         'Op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum Op (:add-x) (:tab 'Tag)
-            :states (:: 'List 'Dynamic) 'Dynamic
-            :hydrate-storage $ :: 'Map 'Tag 'Dynamic
+            :states
+              quote $ List Dynamic
+              , 'Dynamic
+            :hydrate-storage $ quote $ Map Tag Dynamic
           :examples $ []
-          :schema $ :: 'EnumDef
+          :schema $ quote EnumDef
         'RangeState $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct RangeState (:from 'Number) (:to 'Number)
           :examples $ []
-          :schema $ :: 'StructDef
+          :schema $ quote StructDef
         'RawTimeRecord $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct RawTimeRecord (:name 'String) (:kind 'Tag) (:from 'String) (:to 'String)
           :examples $ []
-          :schema $ :: 'StructDef
+          :schema $ quote StructDef
         'SelectionState $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct SelectionState
-            :selected $ :: 'Option 'String
+            :selected $ quote $ Option String
           :examples $ []
-          :schema $ :: 'StructDef
+          :schema $ quote StructDef
         'TimeRecord $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct TimeRecord (:name 'String) (:kind 'Tag) (:from 'Number) (:to 'Number)
           :examples $ []
-          :schema $ :: 'StructDef
+          :schema $ quote StructDef
         'TimelineSource $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct TimelineSource
-            :times $ :: 'List 'app.schema/RawTimeRecord
+            :times $ quote $ List app.schema/RawTimeRecord
           :examples $ []
-          :schema $ :: 'StructDef
+          :schema $ quote StructDef
         'normalize-op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn normalize-op (raw)
             match raw
@@ -340,8 +315,7 @@
                 Op :hydrate-storage $ decode-map-as data $ :: 'Map 'Tag 'Dynamic
               _ $ raise |Unknown-operation
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'app.schema/Op)
-            :args $ [] 'Enum
+          :schema $ quote $ Fn Enum (-> app.schema/Op)
         'normalize-range $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn normalize-range (raw)
             if (struct? raw)
@@ -349,8 +323,7 @@
                 _ _ $ raise |Expected-RangeState
               decode-map-as raw 'app.schema/RangeState
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'app.schema/RangeState)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic (-> app.schema/RangeState)
         'normalize-selection $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn normalize-selection (raw)
             if (struct? raw)
@@ -362,14 +335,13 @@
                 SelectionState :selected $ if (nil? selected) (Option :none)
                   Option :some $ decode-map-as selected 'String
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'app.schema/SelectionState)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic (-> app.schema/SelectionState)
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             {} (:tab :drafts) (:x 0)
               :states $ {}
           :examples $ []
-          :schema $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Map Tag Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.schema
     'app.updater $ %{} 'FileEntry
@@ -389,9 +361,8 @@
                 (:hydrate-storage data) data
               :: 'Map 'Tag 'Dynamic
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'Map 'Tag 'Dynamic) 'app.schema/Op 'String 'Number
-            :return $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Fn (Map Tag Dynamic) app.schema/Op String Number
+            -> $ Map Tag Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater
           :require $ phlox.cursor :refer $ update-states
