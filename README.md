@@ -9,12 +9,12 @@ Previews http://repo.memkits.org/in-time/ .
 ### 0.32.1 迁移候选对使用者的影响
 
 CLI 与 `@calcit/procs` 配对正式 `0.32.1`，需要重新生成 JS 并刷新页面。
-Phlox `0.8.0` 当前使用本地候选图验收，其正式发布依赖整图和 PR CI 尚待验证，不能据此部署。
+Phlox `0.8.0` 已正式发布；本轮由 Caps strict 从正式 tags 全新安装 Phlox、Touch Control `0.0.35`、JS-FFI `0.2.9` 和 Pointed Prompt `0.0.24`，工具链配对验证通过。PR CI 仍需本次精确提交验收。
 官方工具转换 6 处类型写法，30 个定义 schema 不变；历史日期数据、范围计算和布局逻辑不变。
 全定义、五个业务 namespace、完整 strict、不可变安装和构建通过。原项目无附带测试，
 不把零测试计为验收成功。
 
-实际浏览器记录选择与高亮、两个范围滑块及刷新默认范围通过，控制台无警告或错误。
+本轮正式图的实际浏览器记录选择与高亮、From/To 两个范围滑块及刷新默认范围通过，控制台无警告或错误。新 dist 三个文件也与此前检查过的 0.32.1 候选逐字节一致。
 本轮未重新执行 resize/HMR 验收，也不因当前控制区可见而关闭 Phlox 的历史可见性问题。
 COS/rsync 两个 action 使用已核对的精确正式 tag，原上传条件、校验和服务器路径不变；
 npm 包年龄门禁设为一小时，删除旧 alpha 白名单。不新增验证脚本、强转或类型预算。
@@ -40,11 +40,10 @@ PRs only check and build. Original server `dist/*` and destination remain.
 CI keeps canonical formatting, strict entry/public contracts and real builds,
 without extra upload checkers or permanent migration test suites.
 
-CI 保留工具链一致性、规范格式和五个业务 namespace 公开定义检查，并检查全部定义及完整 strict workflow。同一 PR/生产队列使用 `queue: max`；上传前确认提交仍是当前 main，过期提交同时跳过 COS 和服务器同步。原生产/服务器路径不变。编译直接使用默认 JS 入口 `calcit`，监听使用 `calcit -w`。本轮模块候选和正式图限制见文首；CLI/npm 精确配对正式0.32.1，并保留Linux CI。
+CI 保留工具链一致性、规范格式和五个业务 namespace 公开定义检查，并检查全部定义及完整 strict workflow。同一 PR/生产队列使用 `queue: max`；上传前确认提交仍是当前 main，过期提交同时跳过 COS 和服务器同步。原生产/服务器路径不变。编译直接使用默认 JS 入口 `calcit`，监听使用 `calcit -w`。本轮正式发布图与验收范围见文首；CLI/npm 精确配对正式0.32.1，并保留Linux CI。
 PR不上传或部署，仅保留相对路径的同一次构建artifact供本地验收；不能把PR构建通过当作COS上传成功。生产继续使用绝对CDN路径。
 
-0.32.1 补丁复核已通过原门禁与构建；页面验收沿用此前 0.32.0 的记录。
-官方 patch 未改运行时源码，本轮未重复浏览器交互，不将静态复核表述为新页面验收。
+此前首次 0.32.1 补丁复核只重复原门禁和构建。本轮在正式模块发布后完成了新图的实际页面验收，结果见文首。
 
 ### 历史：0.31.0 使用者影响
 

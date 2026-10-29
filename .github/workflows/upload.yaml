@@ -68,7 +68,7 @@ jobs:
         run: yarn build
       - name: Retain tested preview
         if: github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v7.0.0
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: in-time-preview
           path: dist/
