@@ -6,18 +6,13 @@ In time
 
 Previews http://repo.memkits.org/in-time/ .
 
-### 0.32.1 迁移候选对使用者的影响
+### 使用者影响
 
-CLI 与 `@calcit/procs` 配对正式 `0.32.1`，需要重新生成 JS 并刷新页面。
-Phlox `0.8.0` 已正式发布；本轮由 Caps strict 从正式 tags 全新安装 Phlox、Touch Control `0.0.35`、JS-FFI `0.2.9` 和 Pointed Prompt `0.0.24`，工具链配对验证通过。PR CI 仍需本次精确提交验收。
-官方工具转换 6 处类型写法，30 个定义 schema 不变；历史日期数据、范围计算和布局逻辑不变。
-全定义、五个业务 namespace、完整 strict、不可变安装和构建通过。原项目无附带测试，
-不把零测试计为验收成功。
+本地开发使用正式 Calcit CLI 和 `@calcit/procs` **0.38.0**。升级后请重新安装依赖、构建并刷新。历史日期数据、时间范围计算、记录高亮和页面布局保持原行为。
 
-本轮正式图的实际浏览器记录选择与高亮、From/To 两个范围滑块及刷新默认范围通过，控制台无警告或错误。新 dist 三个文件也与此前检查过的 0.32.1 候选逐字节一致。
-本轮未重新执行 resize/HMR 验收，也不因当前控制区可见而关闭 Phlox 的历史可见性问题。
-COS/rsync 两个 action 使用已核对的精确正式 tag，原上传条件、校验和服务器路径不变；
-npm 包年龄门禁设为一小时，删除旧 alpha 白名单。不新增验证脚本、强转或类型预算。
+应用使用具名 `Store` 和 `Op`，`TimelineState` union 区分日期范围和记录选择。Phlox 的匿名游标事件在渲染边界解码，旧状态 Map 在入口检查字段。正式依赖图使用 Phlox 0.9.3、Touch Control 0.0.39、JS FFI 0.2.13 和 Pointed Prompt 0.0.27。
+
+原全量、应用范围和 strict 门禁保持。Chrome 隔离预览验证记录高亮、From/To 滑杆、缩放保留状态和刷新恢复默认范围。验收使用本地字体替身。
 
 ### Workflow
 
