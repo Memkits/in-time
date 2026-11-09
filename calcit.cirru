@@ -36,7 +36,6 @@
           :code $ quote $ defcomp comp-container (store)
             let
                 states $ :states store
-                cursor $ []
                 state $ schema/normalize-range $ .unwrap-or (get states :data)
                   schema/RangeState :from
                     - now-time $ * 1000 a-year
@@ -53,11 +52,11 @@
                 comp-records
                   decode-map-as (>> states :records) (Map Tag Dynamic)
                   , current-records (:from state) (:to state)
-                comp-controls states cursor state
+                comp-controls states state
           :examples $ []
           :schema $ quote $ Fn app.schema/Store (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-controls $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defcomp comp-controls (states cursor state)
+          :code $ quote $ defcomp comp-controls (states state)
             container
               {} $ :position $ [] 20
                 -
@@ -83,7 +82,7 @@
                   :max $ :to state
                   :position $ [] 80 60
                   :on-change $ fn (v d!)
-                    d! $ schema/Op :timeline-state cursor $ assoc state :from (decode-map-as v 'Number)
+                    d! $ schema/Op :timeline-state $ assoc state :from (decode-map-as v 'Number)
                     , &unit
               comp-slider (>> states :to)
                 {} (:title |To)
@@ -93,16 +92,13 @@
                   :max now-time
                   :position $ [] 240 60
                   :on-change $ fn (v d!)
-                    d! $ schema/Op :timeline-state cursor $ assoc state :to (decode-map-as v 'Number)
+                    d! $ schema/Op :timeline-state $ assoc state :to (decode-map-as v 'Number)
                     , &unit
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (List Dynamic) app.schema/RangeState (-> phlox.schema/PhloxElement) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Tag Dynamic) app.schema/RangeState (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-records $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-records (states current-records from to)
             let
-                cursor $ decode-map-as
-                  .unwrap-or (get states :cursor) ([])
-                  List Dynamic
                 state $ schema/normalize-selection $ .unwrap-or (get states :data)
                   schema/SelectionState :selected $ Option :none
                 whole-width $ -
@@ -156,7 +152,7 @@
                                 :on $ {} $ :pointertap
                                   fn (e d!)
                                     println $ assoc state :selected $ Option :some (:name record)
-                                    d! $ schema/Op :timeline-state cursor $ assoc state :selected
+                                    d! $ schema/Op :timeline-state $ assoc state :selected
                                       Option :some $ :name record
                                     , &unit
                               [] 2 $ text $ {}
@@ -223,7 +219,7 @@
             when
               and dev? $ match op
                 (:states _ _) false
-                (:timeline-state _ _) false
+                (:timeline-state _) false
                 _ true
               println |dispatch! op
             reset! *store $ updater @*store op
@@ -238,7 +234,7 @@
               dispatch! $ schema/normalize-op raw
               raise |Expected-Timeline-Event
           :examples $ []
-          :schema $ quote $ Fn AnyEnum (-> Unit)
+          :schema $ quote $ Fn AnyEnum (-> Unit) (:open :decode)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             whenFontsReady $ fn () (render-app!) (watchViewport on-viewport-change!)
@@ -280,7 +276,7 @@
         'Op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum Op (:add-x) (:tab Tag)
             :states (List Dynamic) Dynamic
-            :timeline-state (List Dynamic) TimelineState
+            :timeline-state TimelineState
             :hydrate-storage Store
           :examples $ []
           :schema $ quote EnumDef
@@ -325,15 +321,13 @@
                 Op :states
                   decode-map-as cursor $ List Dynamic
                   , data
-              (:timeline-state cursor state)
-                Op :timeline-state
-                  decode-map-as cursor $ List Dynamic
-                  decode-map-as state TimelineState
+              (:timeline-state state)
+                Op :timeline-state $ decode-map-as state TimelineState
               (:hydrate-storage data)
                 Op :hydrate-storage $ decode-map-as data Store
               _ $ raise |Unknown-operation
           :examples $ []
-          :schema $ quote $ Fn AnyEnum (-> app.schema/Op)
+          :schema $ quote $ Fn AnyEnum (-> app.schema/Op) (:open :decode)
         'normalize-range $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn normalize-range (raw)
             if (struct? raw)
@@ -377,10 +371,14 @@
                 assoc store :states $ decode-map-as
                   assoc-in (:states store) (conj cursor :data) data
                   Map Tag Dynamic
-              (:timeline-state cursor state)
-                assoc store :states $ decode-map-as
-                  assoc-in (:states store) (conj cursor :data) state
-                  Map Tag Dynamic
+              (:timeline-state state)
+                let
+                    path $ match state
+                      (app.schema/RangeState _) ([] :data)
+                      (app.schema/SelectionState _) ([] :records :data)
+                  assoc store :states $ decode-map-as
+                    assoc-in (:states store) path state
+                    Map Tag Dynamic
               (:hydrate-storage data) data
           :examples $ []
           :schema $ quote $ Fn app.schema/Store app.schema/Op String Number (-> app.schema/Store)
