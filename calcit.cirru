@@ -97,7 +97,7 @@
                     d! $ schema/Op :timeline-state $ assoc state :to (decode-map-as v 'Number)
                     , &unit
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) schema/RangeState (-> phlox.schema/PhloxElement) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Tag StateValue) schema/RangeState (-> phlox.schema/PhloxElement) (:generics StateValue) (:features :js-ffi)
         'comp-records $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-records (state current-records from to)
             let
@@ -251,7 +251,7 @@
           :code $ quote $ defn main! ()
             whenFontsReady $ fn () (render-app!) (watchViewport on-viewport-change!)
             add-watch! *store :change $ fn (s p)
-              hint-fn $ Fn app.schema/Store app.schema/Store $ -> Unit
+              hint-fn $ Fn schema/Store schema/Store $ -> Unit
               render-app!
             println "|App Started"
           :examples $ []
@@ -263,7 +263,7 @@
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! () (println "|Code updated") (clear-phlox-caches!) (remove-watch! *store :change)
             add-watch! *store :change $ fn (s p)
-              hint-fn $ Fn app.schema/Store app.schema/Store $ -> Unit
+              hint-fn $ Fn schema/Store schema/Store $ -> Unit
               render-app!
             watchViewport on-viewport-change!
             render! (comp-container @*store) dispatch-phlox! $ {} $ :swap? true
