@@ -50,7 +50,9 @@
                   negate $ * 0.5 $ decode-map-as (browser/viewportWidth) 'Number
                   negate $ * 0.5 $ decode-map-as (browser/viewportHeight) 'Number
                 comp-records
-                  decode-map-as (>> states :records) (Map Tag Dynamic)
+                  let
+                      record-states $ decode-map-as (>> states :records) (Map Tag Dynamic)
+                    schema/normalize-selection $ .unwrap-or (get record-states :data) (schema/SelectionState :selected None)
                   , current-records (:from state) (:to state)
                 comp-controls states state
           :examples $ []
@@ -97,9 +99,8 @@
           :examples $ []
           :schema $ quote $ Fn (Map Tag Dynamic) schema/RangeState (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-records $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defcomp comp-records (states current-records from to)
+          :code $ quote $ defcomp comp-records (state current-records from to)
             let
-                state $ schema/normalize-selection $ .unwrap-or (get states :data) (schema/SelectionState :selected None)
                 whole-width $ -
                   decode-map-as (browser/viewportWidth) 'Number
                   , 80
@@ -161,7 +162,7 @@
                                   :fill $ hslx 0 0 70
                                   :font-size 8
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (List schema/TimeRecord) Number Number (-> phlox.schema/PhloxElement) (:features :js-ffi)
+          :schema $ quote $ Fn schema/SelectionState (List schema/TimeRecord) Number Number (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'db $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def db
             map
@@ -333,7 +334,7 @@
                 _ _ $ raise |Expected-RangeState
               decode-map-as raw 'app.schema/RangeState
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> RangeState)
+          :schema $ quote $ Fn Input (-> RangeState) (:generics Input)
         'normalize-selection $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn normalize-selection (raw)
             if (struct? raw)
@@ -346,7 +347,7 @@
                   (:some selected)
                     if (nil? selected) None $ Some $ decode-map-as selected String
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> SelectionState)
+          :schema $ quote $ Fn Input (-> SelectionState) (:generics Input)
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             Store :tab :drafts :x 0 :states $ {}
