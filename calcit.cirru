@@ -54,7 +54,7 @@
                   , current-records (:from state) (:to state)
                 comp-controls states state
           :examples $ []
-          :schema $ quote $ Fn app.schema/Store (-> phlox.schema/PhloxElement) (:features :js-ffi)
+          :schema $ quote $ Fn schema/Store (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-controls $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-controls (states state)
             container
@@ -95,12 +95,11 @@
                     d! $ schema/Op :timeline-state $ assoc state :to (decode-map-as v 'Number)
                     , &unit
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) app.schema/RangeState (-> phlox.schema/PhloxElement) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Tag Dynamic) schema/RangeState (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'comp-records $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-records (states current-records from to)
             let
-                state $ schema/normalize-selection $ .unwrap-or (get states :data)
-                  schema/SelectionState :selected $ Option :none
+                state $ schema/normalize-selection $ .unwrap-or (get states :data) (schema/SelectionState :selected None)
                 whole-width $ -
                   decode-map-as (browser/viewportWidth) 'Number
                   , 80
@@ -151,9 +150,9 @@
                                   _ $ hslx 0 0 40
                                 :on $ {} $ :pointertap
                                   fn (e d!)
-                                    println $ assoc state :selected $ Option :some (:name record)
+                                    println $ assoc state :selected $ Some (:name record)
                                     d! $ schema/Op :timeline-state $ assoc state :selected
-                                      Option :some $ :name record
+                                      Some $ :name record
                                     , &unit
                               [] 2 $ text $ {}
                                 :text $ str (:name record) "| " (format-time t1) |~ $ format-time t2
@@ -162,7 +161,7 @@
                                   :fill $ hslx 0 0 70
                                   :font-size 8
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (List app.schema/TimeRecord) Number Number (-> phlox.schema/PhloxElement) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Tag Dynamic) (List schema/TimeRecord) Number Number (-> phlox.schema/PhloxElement) (:features :js-ffi)
         'db $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def db
             map
@@ -174,7 +173,7 @@
                   time->number $ :from record
                   , :to $ time->number $ :to record
           :examples $ []
-          :schema $ quote $ List app.schema/TimeRecord
+          :schema $ quote $ List schema/TimeRecord
         'format-time $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn format-time (x)
             decode-map-as (browser/formatDate x) 'String
@@ -213,7 +212,7 @@
         '*store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *store schema/store
           :examples $ []
-          :schema $ quote $ Ref app.schema/Store
+          :schema $ quote $ Ref schema/Store
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             when
@@ -227,11 +226,23 @@
               decode-map-as (js/Date.now) Number
             , &unit
           :examples $ []
-          :schema $ quote $ Fn app.schema/Op (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn schema/Op (-> Unit) (:features :js-ffi)
         'dispatch-phlox! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch-phlox! (raw)
             if (enum? raw)
-              dispatch! $ schema/normalize-op raw
+              dispatch! $ match raw
+                (:add-x) (app.schema/Op :add-x)
+                (:tab tab)
+                  app.schema/Op :tab $ decode-map-as tab 'Tag
+                (:states cursor data)
+                  app.schema/Op :states
+                    decode-map-as cursor $ List app.schema/CursorKey
+                    , data
+                (:timeline-state state)
+                  app.schema/Op :timeline-state $ decode-map-as state app.schema/TimelineState
+                (:hydrate-storage data)
+                  app.schema/Op :hydrate-storage $ decode-map-as data app.schema/Store
+                _ $ raise |Unknown-operation
               raise |Expected-Timeline-Event
           :examples $ []
           :schema $ quote $ Fn AnyEnum (-> Unit) (:open :decode)
@@ -273,9 +284,13 @@
             |../entry/browser.mjs :refer $ whenFontsReady watchViewport
     'app.schema $ %{} 'FileEntry
       :defs $ {}
+        'CursorKey $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion CursorKey Tag String Number
+          :examples $ []
+          :schema $ quote UnionDef
         'Op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum Op (:add-x) (:tab Tag)
-            :states (List Dynamic) Dynamic
+            :states (List app.schema/CursorKey) Dynamic
             :timeline-state TimelineState
             :hydrate-storage Store
           :examples $ []
@@ -311,23 +326,6 @@
           :code $ quote $ defunion TimelineState RangeState SelectionState
           :examples $ []
           :schema $ quote UnionDef
-        'normalize-op $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn normalize-op (raw)
-            match raw
-              (:add-x) (Op :add-x)
-              (:tab tab)
-                Op :tab $ decode-map-as tab 'Tag
-              (:states cursor data)
-                Op :states
-                  decode-map-as cursor $ List Dynamic
-                  , data
-              (:timeline-state state)
-                Op :timeline-state $ decode-map-as state TimelineState
-              (:hydrate-storage data)
-                Op :hydrate-storage $ decode-map-as data Store
-              _ $ raise |Unknown-operation
-          :examples $ []
-          :schema $ quote $ Fn AnyEnum (-> app.schema/Op) (:open :decode)
         'normalize-range $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn normalize-range (raw)
             if (struct? raw)
@@ -335,7 +333,7 @@
                 _ _ $ raise |Expected-RangeState
               decode-map-as raw 'app.schema/RangeState
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/RangeState)
+          :schema $ quote $ Fn Dynamic (-> RangeState)
         'normalize-selection $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn normalize-selection (raw)
             if (struct? raw)
@@ -344,17 +342,16 @@
               let
                   data $ decode-map-as raw $ Map Tag Dynamic
                 SelectionState :selected $ match (get data :selected)
-                  (:none) (Option :none)
+                  (:none) None
                   (:some selected)
-                    if (nil? selected) (Option :none)
-                      Option :some $ decode-map-as selected String
+                    if (nil? selected) None $ Some $ decode-map-as selected String
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/SelectionState)
+          :schema $ quote $ Fn Dynamic (-> SelectionState)
         'store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def store
             Store :tab :drafts :x 0 :states $ {}
           :examples $ []
-          :schema $ quote app.schema/Store
+          :schema $ quote Store
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.schema
     'app.updater $ %{} 'FileEntry
