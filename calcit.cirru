@@ -56,7 +56,7 @@
                   , current-records (:from state) (:to state)
                 comp-controls states state
           :examples $ []
-          :schema $ quote $ Fn schema/Store (-> phlox.schema/PhloxElement) (:features :js-ffi)
+          :schema $ quote $ Fn schema/Store (-> phlox.schema/PhloxElement) (:features :io :js-ffi)
         'comp-controls $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-controls (states state)
             container
@@ -162,7 +162,7 @@
                                   :fill $ hslx 0 0 70
                                   :font-size 8
           :examples $ []
-          :schema $ quote $ Fn schema/SelectionState (List schema/TimeRecord) Number Number (-> phlox.schema/PhloxElement) (:features :js-ffi)
+          :schema $ quote $ Fn schema/SelectionState (List schema/TimeRecord) Number Number (-> phlox.schema/PhloxElement) (:features :io :js-ffi)
         'db $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def db
             map
@@ -227,7 +227,7 @@
               decode-map-as (js/Date.now) Number
             , &unit
           :examples $ []
-          :schema $ quote $ Fn schema/Op (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn schema/Op (-> Unit) (:features :io :js-ffi :state)
         'dispatch-phlox! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch-phlox! (raw)
             if (enum? raw)
@@ -238,7 +238,7 @@
                 (:states cursor data)
                   app.schema/Op :states
                     decode-map-as cursor $ List app.schema/CursorKey
-                    , data
+                    decode-map-as data app.schema/SliderState
                 (:timeline-state state)
                   app.schema/Op :timeline-state $ decode-map-as state app.schema/TimelineState
                 (:hydrate-storage data)
@@ -246,7 +246,7 @@
                 _ $ raise |Unknown-operation
               raise |Expected-Timeline-Event
           :examples $ []
-          :schema $ quote $ Fn AnyEnum (-> Unit) (:open :decode)
+          :schema $ quote $ Fn AnyEnum (-> Unit) (:features :io :state) (:open :decode)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             whenFontsReady $ fn () (render-app!) (watchViewport on-viewport-change!)
@@ -255,11 +255,11 @@
               render-app!
             println "|App Started"
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'on-viewport-change! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn on-viewport-change! () (clear-phlox-caches!) (render-app!) &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! () (println "|Code updated") (clear-phlox-caches!) (remove-watch! *store :change)
             add-watch! *store :change $ fn (s p)
@@ -268,12 +268,12 @@
             watchViewport on-viewport-change!
             render! (comp-container @*store) dispatch-phlox! $ {} $ :swap? true
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             render! (comp-container @*store) dispatch-phlox! $ {}
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require (|shortid :as shortid)
@@ -291,7 +291,7 @@
           :schema $ quote UnionDef
         'Op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum Op (:add-x) (:tab Tag)
-            :states (List app.schema/CursorKey) Dynamic
+            :states (List app.schema/CursorKey) SliderState
             :timeline-state TimelineState
             :hydrate-storage Store
           :examples $ []
@@ -307,6 +307,10 @@
         'SelectionState $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct SelectionState
             :selected $ Option String
+          :examples $ []
+          :schema $ quote StructDef
+        'SliderState $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct SliderState (:dragging? Bool) (:v0 Number) (:x0 Number)
           :examples $ []
           :schema $ quote StructDef
         'Store $ %{} 'CodeEntry (:doc |)
@@ -367,7 +371,7 @@
               (:tab tab) (assoc store :tab tab)
               (:states cursor data)
                 assoc store :states $ decode-map-as
-                  assoc-in (:states store) (conj cursor :data) data
+                  assoc-in (:states store) (conj cursor :data) (&struct:to-map data)
                   Map Tag Dynamic
               (:timeline-state state)
                 let
