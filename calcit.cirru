@@ -246,7 +246,7 @@
                 _ $ raise |Unknown-operation
               raise |Expected-Timeline-Event
           :examples $ []
-          :schema $ quote $ Fn AnyEnum (-> Unit) (:features :io :state) (:open :decode)
+          :schema $ quote $ Fn Input (-> Unit) (:generics Input) (:features :io :state)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             whenFontsReady $ fn () (render-app!) (watchViewport on-viewport-change!)
