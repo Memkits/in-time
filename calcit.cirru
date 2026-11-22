@@ -106,16 +106,13 @@
                   , 80
               container
                 {} $ :position $ [] 60 28
-                graphics $ {} $ :ops
+                path-graphics ([] 0 0)
                   []
-                    g :line-style $ {}
-                      :color $ hslx 0 0 20
-                      :width 1
-                      :alpha 1
-                    g :move-to $ [] 0 0
-                    g :line-to $ [] 0 400
-                    g :move-to $ [] whole-width 0
-                    g :line-to $ [] whole-width 400
+                    PathOp :line-style (hslx 0 0 20) 1 1
+                    PathOp :move-to $ [] 0 0
+                    PathOp :line-to $ [] 0 400
+                    PathOp :move-to $ [] whole-width 0
+                    PathOp :line-to $ [] whole-width 400
                 create-list :container ({})
                   -> current-records (.sort-by :from)
                     map-indexed $ fn (idx record)
@@ -204,7 +201,8 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.container
           :require
-            phlox.core :refer $ defcomp >> hslx rect text container graphics create-list g
+            phlox.core :refer $ defcomp >> hslx rect text container path-graphics create-list
+            phlox.schema :refer $ PathOp
             phlox.comp.slider :refer $ comp-slider
             app.schema :as schema
             |../entry/browser.mjs :as browser
