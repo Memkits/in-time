@@ -10,7 +10,7 @@ Previews http://repo.memkits.org/in-time/ .
 
 本地开发使用正式 Calcit CLI 和 `@calcit/procs` **0.44.0**。升级后请重新安装依赖、构建并刷新。历史日期数据、时间范围计算、记录高亮和页面布局保持原行为。应用内部的时间轴事件只传递范围或选中项，更新器按类型定位原状态路径。
 
-应用使用具名 `Store` 和 `Op`，`TimelineState` union 区分日期范围和记录选择。Phlox 的匿名游标事件在渲染边界解码，旧状态 Map 在入口检查字段。正式依赖图使用 Phlox 0.9.8、Touch Control 0.0.43、JS FFI 0.2.19 和 Pointed Prompt 0.0.30。
+应用使用具名 `Store` 和 `Op`，`TimelineState` union 区分日期范围和记录选择。Phlox 的匿名游标事件在渲染边界解码，旧状态 Map 在入口检查字段。正式依赖图使用 Phlox 0.10.0、Touch Control 0.0.43、JS FFI 0.2.19 和 Pointed Prompt 0.0.30。
 
 原全量、应用范围和 strict 门禁保持。此前的 Chrome 隔离预览验证了记录高亮、From/To 滑杆、缩放保留状态和刷新恢复默认范围，使用本地字体替身。
 
