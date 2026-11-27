@@ -1,3 +1,4 @@
-{} (:calcit-version |0.45.1) (:version |0.1.0)
-  :dependencies $ {}
-    |Phlox-GL/phlox |0.12.2
+
+{} (:calcit-version |0.46.0)
+  :version |0.1.0
+  :dependencies $ {} (|Phlox-GL/phlox |0.13.1)
