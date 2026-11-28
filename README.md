@@ -8,17 +8,17 @@ Previews http://repo.memkits.org/in-time/ .
 
 ### 使用者影响
 
-本地开发使用正式 Calcit CLI 和 `@calcit/procs` **0.45.1**。升级后请重新安装依赖、构建并刷新。历史日期数据、时间范围计算、记录高亮和页面布局保持原行为。应用内部的时间轴事件只传递范围或选中项，更新器按类型定位原状态路径。
+本地开发使用正式 Calcit CLI 和 `@calcit/procs` **0.47.1**。升级后请重新安装依赖、构建并刷新。历史日期数据、时间范围计算、记录高亮和页面布局保持原行为。应用内部的时间轴事件只传递范围或选中项，更新器按类型定位原状态路径。
 
-应用使用具名 `Store` 和 `Op`，`TimelineState` union 区分日期范围和记录选择。Phlox 的匿名游标事件在渲染边界解码，旧状态 Map 在入口检查字段。正式依赖图使用 Phlox 0.12.2、Touch Control 0.0.45、JS FFI 0.2.24 和 Pointed Prompt 0.0.32。
+应用使用具名 `Store` 和 `Op`，`TimelineState` union 区分日期范围和记录选择。Phlox 的匿名游标事件在渲染边界解码，旧状态 Map 在入口检查字段。正式依赖图使用 Phlox 0.13.2、Touch Control 0.0.48、JS FFI 0.2.26 和 Pointed Prompt 0.0.35。
 
-原全量、应用范围和 strict 门禁保持。此前的 Chrome 隔离预览验证了记录高亮、From/To 滑杆、缩放保留状态和刷新恢复默认范围，使用本地字体替身。 本次 0.45.1 已通过 191 个定义和 34 个公开定义的严格检查与构建；项目没有附带测试，尚未重新验收浏览器交互。
+原全量、应用范围和 strict 门禁保持。此前的 Chrome 隔离预览验证了记录高亮、From/To 滑杆、缩放保留状态和刷新恢复默认范围，使用本地字体替身。 本次 0.47.1 已通过全部定义、业务范围检查和完整 strict；项目没有附带测试，尚未重新验收浏览器交互。
 
 ### Workflow
 
 Workflow https://github.com/mvc-works/phlox-workflow
 
-Use paired formal Calcit/procs 0.45.1, Node.js 24 and Yarn 4.18.0 with canonical
+Use paired formal Calcit/procs 0.47.1, Node.js 24 and Yarn 4.18.0 with canonical
 `calcit.cirru` / `deps.cirru`. Run `caps --ci --strict`, `yarn install --immutable`,
 then `yarn dev` or `yarn build`. Development compiles once before starting Vite.
 Run `yarn watch` in another terminal for live compilation;
@@ -35,10 +35,10 @@ PRs only check and build. Original server `dist/*` and destination remain.
 CI keeps canonical formatting, strict entry/public contracts and real builds,
 without extra upload checkers or permanent migration test suites.
 
-CI 保留工具链一致性、规范格式和五个业务 namespace 公开定义检查，并检查全部定义及完整 strict workflow。同一 PR/生产队列使用 `queue: max`；上传前确认提交仍是当前 main，过期提交同时跳过 COS 和服务器同步。原生产/服务器路径不变。编译直接使用默认 JS 入口 `calcit`，监听使用 `calcit -w`。CLI/npm 精确配对正式 0.44.0，并保留 Linux CI。
+CI 保留工具链一致性、规范格式和五个业务 namespace 公开定义检查，并检查全部定义及完整 strict workflow。同一 PR/生产队列使用 `queue: max`；上传前确认提交仍是当前 main，过期提交同时跳过 COS 和服务器同步。原生产/服务器路径不变。编译直接使用默认 JS 入口 `calcit`，监听使用 `calcit -w`。CLI/npm 精确配对正式 0.47.1，并保留 Linux CI。
 PR不上传或部署，仅保留相对路径的同一次构建artifact供本地验收；不能把PR构建通过当作COS上传成功。生产继续使用绝对CDN路径。
 
-此前浏览器验收基于旧版本；本次 0.44 升级未重新执行页面交互验收。
+此前浏览器验收基于旧版本；本次 0.47.1 升级未重新执行页面交互验收。
 
 ### 历史：0.31.0 使用者影响
 
